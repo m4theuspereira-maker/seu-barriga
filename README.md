@@ -1,12 +1,6 @@
 ## Description
 
-That's a simple solution to start APIs in nodejs if you don't want to download all dependencies every time when you start some new project.
-
-You can implement any architecture on this template and it already comes with prettier, vitest, eslint, docker and suport for circleci if you wanna implement CI/CD in that platform.
-
-## Basics
-
-The template comes by default with some basic commands, for example:
+Seu Barriga is a integration payment service, that for a while is integrated only with stripe checkout payment. This service can me integred with any payment gateway
 
 ### To build project and add husky configuration
 
