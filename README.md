@@ -1,6 +1,6 @@
 ## Description
 
-Seu Barriga is a integration payment service, that for a while is integrated only with stripe checkout payment. This service can me integred with any payment gateway
+Seu Barriga is an integration payment service, that for a while is integrated only with stripe checkout payment. This service can me integred with any payment gateway
 
 ### To build project and add husky configuration
 
