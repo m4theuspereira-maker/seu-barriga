@@ -7,13 +7,14 @@ export class PaymentController {
 
   makeCheckout = async (req: Request, res: Response) => {
     try {
-      const { lineItems } = req.body as any;
+      const { line_items: lineItems } = req.body as any;
 
       const result = await this.stripeService.makeCheckout(
         lineItems as ILineItem[]
       );
 
-      return ok(res, result);
+      // return res.redirect(result.url!);
+      return ok(res, result.url);
     } catch (error) {
       return serverError(res, error);
     }
