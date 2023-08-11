@@ -3,6 +3,7 @@ export interface ILineItem {
   quantity: number;
 }
 
+
 export interface IProductLineItem {
   id: string;
   name: string;
