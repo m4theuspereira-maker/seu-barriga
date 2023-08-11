@@ -4,16 +4,16 @@ import {
   priceIds,
   SUCCESS_URL
 } from "../common/environment-consts";
+import {
+  ILineItem,
+  IPaymentService,
+  IProductLineItem
+} from "./interfaces/interfaces";
 
-export interface ILineItem {
-  price: string;
-  quantity: number;
-}
-
-export class StripeService {
+export class StripeService implements IPaymentService {
   constructor(private readonly stripeConfig: Stripe) {}
 
-  async makeCheckout(lineItems: Array<any>) {
+  async makeCheckout(lineItems: Array<IProductLineItem>) {
     let lineItemsToBeSend: ILineItem[] = [];
 
     lineItems.forEach((lineItem) => {
