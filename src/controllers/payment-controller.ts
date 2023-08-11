@@ -1,16 +1,15 @@
 import { Request, Response } from "express";
 import { ok, serverError } from "./handlers/handlers";
-import { IProductLineItem } from "../services/interfaces/interfaces";
-import { StripeService } from "../services/stripe-service";
+import { IPaymentService, IProductLineItem } from "../services/interfaces/interfaces";
 
 export class PaymentController {
-  constructor(private readonly stripeService: StripeService) {}
+  constructor(private readonly paymentService: IPaymentService) {}
 
   makeCheckout = async (req: Request, res: Response) => {
     try {
       const { line_items: lineItems } = req.body as any;
 
-      const result = await this.stripeService.makeCheckout(
+      const result = await this.paymentService.makeCheckout(
         lineItems as IProductLineItem[]
       );
 
