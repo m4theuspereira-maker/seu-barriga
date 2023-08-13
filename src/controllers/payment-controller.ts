@@ -30,9 +30,9 @@ export class PaymentController {
     try {
       const { meuIP, status } = req.body as any;
 
-      const result = await this.paymentService.switchOrderStatus(meuIP, status);
+      await this.paymentService.switchOrderStatus(meuIP, status);
 
-      return ok(res, result!);
+      return ok(res, `ok`);
     } catch (error) {
       return serverError(res, error);
     }

@@ -41,5 +41,5 @@ export interface IPaymentService {
     externalIdOrderId: string
   ): Promise<{ url: string | null }>;
 
-  switchOrderStatus(ip: string, status: string): Promise<string | null>;
+  switchOrderStatus(ip: string, status: string): Promise<void>;
 }

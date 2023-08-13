@@ -22,11 +22,8 @@ export class StripeService implements IPaymentService {
     private readonly httpClient: HttpClient
   ) {}
 
-  async switchOrderStatus(ip: string, status: string): Promise<string> {
+  async switchOrderStatus(ip: string, status: string): Promise<void> {
     const orderFound = (await this.orderRepository.findMany(ip)).at(0);
-
-    console.log(orderFound?.externalOrderId);
-
     const url = `https://mimosapowders.com/wp-json/wc/v3/orders/${
       orderFound?.externalOrderId
     }?consumer_key=${WOOCOMMERCE_COSTUMER_KEY!}&consumer_secret=${WOOCOMMERCE_COSTUMER_SECRET!}`;
@@ -35,10 +32,6 @@ export class StripeService implements IPaymentService {
       { status },
       { headers: { "Content-Type": "application/json" } }
     );
-
-    console.log(result.statusText);
-
-    return result.statusText;
   }
 
   async makeCheckout(
