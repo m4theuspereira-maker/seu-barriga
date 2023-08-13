@@ -6,9 +6,17 @@
       "use": "@vercel/node"
     }
   ],
-  "routes":[
+  "routes": [
     {
       "src": "/",
+      "dest": "/app.ts"
+    },
+    {
+      "src": "/order-id",
+      "dest": "/app.ts"
+    },
+    {
+      "src": "/checkout-payment",
       "dest": "/app.ts"
     }
   ]
