@@ -16,3 +16,10 @@ model lineItem {
   name  String
   price String
 }
+
+model order {
+  id              String   @id @map("_id") @db.ObjectId
+  externalOrderId String   @unique()
+  ip              String
+  createdAt       DateTime @default(now())
+}

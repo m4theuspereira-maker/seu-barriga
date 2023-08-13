@@ -3,7 +3,6 @@ export interface ILineItem {
   quantity: number;
 }
 
-
 export interface IProductLineItem {
   id: string;
   name: string;
@@ -36,5 +35,11 @@ export interface IProductMetadata {
 }
 
 export interface IPaymentService {
-  makeCheckout(lineItems: Array<any>): Promise<{ url: string | null }>;
+  makeCheckout(
+    lineItems: Array<any>,
+    ip: string,
+    externalIdOrderId: string
+  ): Promise<{ url: string | null }>;
+
+  switchOrderStatus(ip: string, status: string): Promise<string | null>;
 }

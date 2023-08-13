@@ -7,17 +7,48 @@ import {
 import { LineItemsRepository } from "../repositories/line-items-repository";
 import {
   STRIPE_CANCEL_URL,
-  STRIPE_SUCESS_URL
+  STRIPE_SUCESS_URL,
+  WOOCOMMERCE_COSTUMER_KEY,
+  WOOCOMMERCE_COSTUMER_SECRET
 } from "../common/environment-consts";
+import { OrderRepository } from "../repositories/order-repository";
+import { HttpClient } from "../config/client";
 
 export class StripeService implements IPaymentService {
   constructor(
     private readonly stripeConfig: Stripe,
-    private readonly lineItemsRepository: LineItemsRepository
+    private readonly lineItemsRepository: LineItemsRepository,
+    private readonly orderRepository: OrderRepository,
+    private readonly httpClient: HttpClient
   ) {}
 
-  async makeCheckout(lineItems: Array<IProductLineItem>) {
+  async switchOrderStatus(ip: string, status: string): Promise<string> {
+    const orderFound = (await this.orderRepository.findMany(ip)).at(0);
+
+    console.log(orderFound?.externalOrderId);
+
+    const url = `https://mimosapowders.com/wp-json/wc/v3/orders/${
+      orderFound?.externalOrderId
+    }?consumer_key=${WOOCOMMERCE_COSTUMER_KEY!}&consumer_secret=${WOOCOMMERCE_COSTUMER_SECRET!}`;
+    const result = await this.httpClient.put(
+      url,
+      { status },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    console.log(result.statusText);
+
+    return result.statusText;
+  }
+
+  async makeCheckout(
+    lineItems: Array<IProductLineItem>,
+    ip: string,
+    externalOrderId: string
+  ) {
     let lineItemsToBeSend: ILineItem[] = [];
+
+    await this.orderRepository.create({ ip, externalOrderId });
 
     const productsFound = await this.lineItemsRepository.findMany(
       lineItems.map((lineItem) => lineItem.name)
