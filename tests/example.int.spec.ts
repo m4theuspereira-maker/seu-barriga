@@ -1,5 +1,5 @@
 import supertest from "supertest";
-import { app } from "../src/app";
+import { app } from "../app";
 import { describe, test, expect } from "vitest";
 
 describe("example route", () => {
