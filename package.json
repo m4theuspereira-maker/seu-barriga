@@ -10,11 +10,10 @@
     "test": "vitest run",
     "test:watch": "npm test -- --watch",
     "test:coverage": "npm test -- --coverage",
-    "dev": "tsx src/index.ts",
+    "dev": "tsx app.ts",
     "start": "node dist/app.js",
     "prepare": "husky install && npx husky add .husky/pre-commit 'npx lint-staged' && npx husky add .husky/pre-push 'npm test' ",
     "postinstall": "npx prisma generate"
-
   },
   "keywords": [],
   "author": "",
@@ -45,7 +44,7 @@
   },
   "dependencies": {
     "@prisma/client": "^5.1.1",
-    "axios": "^1.4.0",
+    "axios": "^1.5.1",
     "cors": "^2.8.5",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",

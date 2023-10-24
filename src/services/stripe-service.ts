@@ -1,5 +1,6 @@
 import Stripe from "stripe";
 import {
+  IDeliveryInformation,
   ILineItem,
   IPaymentService,
   IProductLineItem
@@ -13,13 +14,15 @@ import {
 } from "../common/environment-consts";
 import { OrderRepository } from "../repositories/order-repository";
 import { HttpClient } from "../config/client";
+import { TelegramService } from "./telegram-service";
 
 export class StripeService implements IPaymentService {
   constructor(
     private readonly stripeConfig: Stripe,
     private readonly lineItemsRepository: LineItemsRepository,
     private readonly orderRepository: OrderRepository,
-    private readonly httpClient: HttpClient
+    private readonly httpClient: HttpClient,
+    private readonly telegramService: TelegramService
   ) {}
 
   async switchOrderStatus(ip: string, status: string): Promise<void> {
@@ -37,11 +40,14 @@ export class StripeService implements IPaymentService {
   async makeCheckout(
     lineItems: Array<IProductLineItem>,
     ip: string,
-    externalOrderId: string
+    externalOrderId: string,
+    deliveryInformation?: IDeliveryInformation
   ) {
     let lineItemsToBeSend: ILineItem[] = [];
 
-    await this.orderRepository.create({ ip, externalOrderId });
+    if (ip) {
+      await this.orderRepository.create({ ip, externalOrderId });
+    }
 
     const productsFound = await this.lineItemsRepository.findMany(
       lineItems.map((lineItem) => lineItem.name)
@@ -62,16 +68,51 @@ export class StripeService implements IPaymentService {
       }
     });
 
-    return this.intergrateWithStripe(lineItemsToBeSend);
+    return this.intergrateWithStripe(lineItemsToBeSend, deliveryInformation);
   }
 
-  private async intergrateWithStripe(lineItems: Array<ILineItem>) {
+  private async intergrateWithStripe(
+    lineItems: Array<ILineItem>,
+    deliveryInformation?: IDeliveryInformation
+  ) {
     const { url } = await this.stripeConfig.checkout.sessions.create({
       line_items: lineItems,
       mode: "payment",
       success_url: STRIPE_SUCESS_URL!,
       cancel_url: STRIPE_CANCEL_URL!
     });
-    return { url };
+
+    if (deliveryInformation) {
+      await this.telegramService.sendMessageToTelegramBot(
+        this.formatMessage(deliveryInformation)
+      );
+    }
+
+    return { url: url };
+  }
+
+  formatMessage(deliveryInformation: IDeliveryInformation) {
+    const houseType = !deliveryInformation.houseType
+      ? ""
+      : deliveryInformation.houseType;
+    const additionalInformation = !deliveryInformation.additionalInformation
+      ? ""
+      : deliveryInformation.additionalInformation;
+
+    return `
+🛍️ **Nova Compra Realizada** 🛍️
+
+ℹ️ **Detalhes da Compra:**
+
+🗣️ Para: ${deliveryInformation.firstName} ${deliveryInformation.lastName}
+🌎 País: ${deliveryInformation.country}
+🏡 Estado: ${deliveryInformation.state}
+📬 ZipCode: ${deliveryInformation.zipCode}
+📞 Telefone: ${deliveryInformation.phone}
+📧 E-mail: ${deliveryInformation.emailAddress}
+🛣️ Rua e número: ${deliveryInformation.streetHouseNumber}
+🏘️ Tipo de residência: ${houseType}
+🗞️ Informações Adicionais: ${additionalInformation}
+    `;
   }
 }
