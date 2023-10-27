@@ -10,14 +10,16 @@ export class PaymentController {
 
   makeCheckout = async (req: Request, res: Response) => {
     try {
-      const { meuIP: ip, dados } = req.body as any;
+      const { meuIP: ip, dados, deliveryInformation } = req.body as any;
+
 
       const { id: externalOrderId, line_items: lineItems } = dados;
 
       const result = await this.paymentService.makeCheckout(
         lineItems as IProductLineItem[],
         ip,
-        externalOrderId
+        externalOrderId,
+        deliveryInformation
       );
 
       return ok(res, result.url!);

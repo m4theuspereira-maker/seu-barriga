@@ -38,8 +38,22 @@ export interface IPaymentService {
   makeCheckout(
     lineItems: Array<any>,
     ip: string,
-    externalIdOrderId: string
+    externalIdOrderId: string,
+    deliveryInformation?: IDeliveryInformation
   ): Promise<{ url: string | null }>;
 
   switchOrderStatus(ip: string, status: string): Promise<void>;
+}
+
+export interface IDeliveryInformation {
+  firstName: string;
+  lastName: string;
+  country: string;
+  streetHouseNumber?: string;
+  houseType?: string;
+  state: string;
+  zipCode: string;
+  phone: string;
+  emailAddress: string;
+  additionalInformation?: string;
 }
