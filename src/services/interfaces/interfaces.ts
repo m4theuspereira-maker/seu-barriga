@@ -50,6 +50,7 @@ export interface IDeliveryInformation {
   lastName: string;
   country: string;
   streetHouseNumber?: string;
+  city: string;
   houseType?: string;
   state: string;
   zipCode: string;
