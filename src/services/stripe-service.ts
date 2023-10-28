@@ -107,6 +107,7 @@ export class StripeService implements IPaymentService {
 🗣️ Para: ${deliveryInformation.firstName} ${deliveryInformation.lastName}
 🌎 País: ${deliveryInformation.country}
 🏡 Estado: ${deliveryInformation.state}
+🏙️ Cidade: ${deliveryInformation.city}
 📬 ZipCode: ${deliveryInformation.zipCode}
 📞 Telefone: ${deliveryInformation.phone}
 📧 E-mail: ${deliveryInformation.emailAddress}
