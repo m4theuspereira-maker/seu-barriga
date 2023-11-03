@@ -11,9 +11,7 @@
     "test:watch": "npm test -- --watch",
     "test:coverage": "npm test -- --coverage",
     "dev": "tsx app.ts",
-    "start": "node dist/app.js",
-    "prepare": "husky install && npx husky add .husky/pre-commit 'npx lint-staged' && npx husky add .husky/pre-push 'npm test' ",
-    "postinstall": "npx prisma generate"
+    "start": "node dist/app.js"
   },
   "keywords": [],
   "author": "",
@@ -50,14 +48,5 @@
     "express": "^4.18.2",
     "mongodb": "^5.7.0",
     "stripe": "^12.12.0"
-  },
-  "hooks": {
-    "pre-commit": "lint-staged",
-    "pre-push": "npm run eslint"
-  },
-  "lint-staged": {
-    "**/*.{ts,js}": [
-      "vitest related --run"
-    ]
   }
 }
