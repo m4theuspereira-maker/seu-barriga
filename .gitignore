@@ -5,7 +5,6 @@ coverage
 
 .env
 coverage
-.husky
 
 .vscode
 .vercel
