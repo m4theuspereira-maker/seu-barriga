@@ -57,4 +57,5 @@ export interface IDeliveryInformation {
   phone: string;
   emailAddress: string;
   additionalInformation?: string;
+  products?: string[];
 }

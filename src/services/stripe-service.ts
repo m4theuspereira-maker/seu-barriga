@@ -44,14 +44,17 @@ export class StripeService implements IPaymentService {
     deliveryInformation?: IDeliveryInformation
   ) {
     let lineItemsToBeSend: ILineItem[] = [];
+    const products = lineItems.map((lineItem) => lineItem.name);
+    const deliveruInformationWithProdutcts = {
+      ...deliveryInformation,
+      products
+    };
 
     if (ip) {
       await this.orderRepository.create({ ip, externalOrderId });
     }
 
-    const productsFound = await this.lineItemsRepository.findMany(
-      lineItems.map((lineItem) => lineItem.name)
-    );
+    const productsFound = await this.lineItemsRepository.findMany(products);
 
     lineItems.forEach((lineItem) => {
       const priceFound = productsFound.find(
@@ -68,7 +71,10 @@ export class StripeService implements IPaymentService {
       }
     });
 
-    return this.intergrateWithStripe(lineItemsToBeSend, deliveryInformation);
+    return this.intergrateWithStripe(
+      lineItemsToBeSend,
+      deliveruInformationWithProdutcts as any
+    );
   }
 
   private async intergrateWithStripe(
@@ -104,7 +110,8 @@ export class StripeService implements IPaymentService {
 
 ℹ️ **Detalhes da Compra:**
 
-🗣️ Para: ${deliveryInformation.firstName} ${deliveryInformation.lastName}
+🗣️ Para: ${deliveryInformation.firstName} ${deliveryInformation.lastName},
+📦 Produtos: ${deliveryInformation.products?.toString()}
 🌎 País: ${deliveryInformation.country}
 🏡 Estado: ${deliveryInformation.state}
 🏙️ Cidade: ${deliveryInformation.city}
