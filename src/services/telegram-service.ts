@@ -14,8 +14,6 @@ export class TelegramService {
         text: textmessage,
         disable_web_page_preview: true
       });
-
-      console.log(textmessage);
     } catch (error) {
       await this.sendMessageToTelegramBot(textmessage);
       throw error;
