@@ -90,12 +90,12 @@ export class ValidationMiddlewares extends Validator {
           country: Joi.string().required(),
           city: Joi.string().required(),
           streetHouseNumber: Joi.string().required(),
-          houseType: Joi.string().allow().empty(),
+          houseType: Joi.string().allow(""),
           state: Joi.string().required(),
           zipCode: Joi.string().required(),
           phone: Joi.string().required(),
           emailAddress: Joi.string().required(),
-          additionalInformation: Joi.string().allow().empty()
+          additionalInformation: Joi.string().allow("")
         })
       })
     };
