@@ -57,6 +57,7 @@ export class ValidationMiddlewares extends Validator {
         dados: Joi.object({
           id: Joi.string().allow(""),
           externalOrderId: Joi.string(),
+          parent_id: Joi.string(),
           line_items: Joi.array().items({
             id: Joi.string().allow(""),
             name: Joi.string(),
