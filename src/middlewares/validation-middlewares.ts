@@ -54,37 +54,7 @@ export class ValidationMiddlewares extends Validator {
         ip: Joi.object({
           meuIp: Joi.string().allow("")
         }),
-        dados: Joi.object({
-          id: Joi.string().allow(""),
-          externalOrderId: Joi.string(),
-          parent_id: Joi.string(),
-          line_items: Joi.array().items({
-            id: Joi.string().allow(""),
-            name: Joi.string(),
-            product_id: Joi.string().allow(""),
-            variation_id: Joi.string().allow(""),
-            quantity: Joi.number(),
-            tax_class: Joi.string().allow(""),
-            subtotal: Joi.string().allow(""),
-            subtotal_tax: Joi.string().allow(""),
-            total: Joi.string().allow(""),
-            total_tax: Joi.string().allow(""),
-            meta_data: Joi.array().items({
-              id: Joi.string().allow(""),
-              key: Joi.string().allow(""),
-              value: Joi.string().allow(""),
-              display_key: Joi.string().allow(""),
-              display_value: Joi.string().allow("")
-            }),
-            sku: Joi.string().allow(""),
-            price: Joi.string(),
-            image: Joi.object({
-              id: Joi.string().allow(""),
-              src: Joi.string().allow("")
-            }),
-            parent_name: Joi.string().allow("")
-          })
-        }),
+        dados: Joi.object(),
         deliveryInformation: Joi.object({
           firstName: Joi.string().required(),
           lastName: Joi.string().required(),
