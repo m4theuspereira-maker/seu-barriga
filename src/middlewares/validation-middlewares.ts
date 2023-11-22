@@ -51,7 +51,7 @@ export class ValidationMiddlewares extends Validator {
   ) => {
     const schema = {
       body: Joi.object({
-        ip: Joi.string().allow(""),
+        meuIP: Joi.string().allow(""),
         dados: Joi.object(),
         deliveryInformation: Joi.object({
           firstName: Joi.string().required(),
