@@ -95,7 +95,7 @@ export class ValidationMiddlewares extends Validator {
           zipCode: Joi.string().required(),
           phone: Joi.string().required(),
           emailAddress: Joi.string().required(),
-          additionalInformation: Joi.string().empty()
+          additionalInformation: Joi.string().allow().empty()
         })
       })
     };
