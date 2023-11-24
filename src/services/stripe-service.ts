@@ -88,7 +88,7 @@ export class StripeService implements IPaymentService {
       cancel_url: STRIPE_CANCEL_URL!
     });
 
-    if (deliveryInformation) {
+    if (deliveryInformation?.firstName != undefined) {
       await this.telegramService.sendMessageToTelegramBot(
         this.formatMessage(deliveryInformation)
       );
