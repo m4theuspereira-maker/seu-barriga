@@ -85,7 +85,8 @@ export class StripeService implements IPaymentService {
       line_items: lineItems,
       mode: "payment",
       success_url: STRIPE_SUCESS_URL!,
-      cancel_url: STRIPE_CANCEL_URL!
+      cancel_url: STRIPE_CANCEL_URL!,
+      allow_promotion_codes: true
     });
 
     if (deliveryInformation?.firstName != undefined) {
