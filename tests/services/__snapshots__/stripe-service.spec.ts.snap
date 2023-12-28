@@ -1,0 +1,34 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`StripeService > formatMessage > should return products array as string > 🛍️ **Nova Compra Realizada** 🛍️
+
+      ℹ️ **Detalhes da Compra:**
+      🗣️ Para: Matheus Santos Pereira,
+      📦 Produtos: Mimosa H. Inner Root Bark (MHRB) – Powder - 0,5kg
+      🌎 País: Brasil
+      🏡 Estado: - Select Concelho -
+      🏙️ Cidade: Tobias Barreto
+      📬 ZipCode: 943000000
+      📞 Telefone: 9999999999999999
+      📧 E-mail: matheusmonaco1@hotmail.com
+      🛣️ Rua e número: Rua Carlos Lemos, 638
+      🏘️ Tipo de residência:
+      🗞️ Informações Adicionais:  1`] = `
+"
+🛍️ **Nova Compra Realizada** 🛍️
+
+ℹ️ **Detalhes da Compra:**
+
+🗣️ Para: Matheus Santos Pereira,
+📦 Produtos: Mimosa H. Inner Root Bark (MHRB) – Powder - 0,5kg
+🌎 País: Brasil
+🏡 Estado: - Select Concelho -
+🏙️ Cidade: Tobias Barreto
+📬 ZipCode: 943000000
+📞 Telefone: 9999999999999999
+📧 E-mail: matheusmonaco1@hotmail.com
+🛣️ Rua e número: Rua Carlos Lemos, 638
+🏘️ Tipo de residência: 
+🗞️ Informações Adicionais: 
+    "
+`;

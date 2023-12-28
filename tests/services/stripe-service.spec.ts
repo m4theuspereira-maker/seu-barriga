@@ -1,11 +1,11 @@
 import { beforeAll, describe, expect, it } from "vitest";
-import { StripeService } from "../src/services/stripe-service";
-import { stripeConfig } from "../src/config/stripe-config";
-import { LineItemsRepository } from "../src/repositories/line-items-repository";
-import { OrderRepository } from "../src/repositories/order-repository";
+import { StripeService } from "../../src/services/stripe-service";
+import { stripeConfig } from "../../src/config/stripe-config";
+import { LineItemsRepository } from "../../src/repositories/line-items-repository";
+import { OrderRepository } from "../../src/repositories/order-repository";
 import axios from "axios";
-import { telegramService } from "../src/factories/factories";
-import { client } from "../src/config/client";
+import { telegramService } from "../../src/factories/factories";
+import { client } from "../../src/config/client";
 
 describe("StripeService", () => {
   let stripeService: StripeService;
@@ -22,7 +22,7 @@ describe("StripeService", () => {
 
   describe("formatMessage", () => {
     it("should return products array as string", () => {
-      const result = stripeService.formatMessage({
+      const result = telegramService.formatMessage({
         firstName: "Matheus",
         lastName: "Santos Pereira",
         country: "Brasil",

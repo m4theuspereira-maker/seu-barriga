@@ -23,5 +23,10 @@ export function paymentFactory() {
 }
 
 export function binanceFactory() {
-  return new BinanceService(axios);
+  return new BinanceService(
+    axios,
+    new LineItemsRepository(client),
+    new OrderRepository(client),
+    telegramService
+  );
 }

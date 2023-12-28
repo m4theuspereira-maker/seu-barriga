@@ -1,13 +1,30 @@
 import {
   BINANCE_API_KEY,
-  BINANCE_SECRET_KEY
+  BINANCE_CANCEL_URL,
+  BINANCE_SECRET_KEY,
+  BINANCE_SUCESS_URL,
+  WOOCOMMERCE_COSTUMER_KEY,
+  WOOCOMMERCE_COSTUMER_SECRET
 } from "../common/environment-consts";
 import { HttpClient } from "../config/client";
-import { IDeliveryInformation, IPaymentService } from "./interfaces/interfaces";
+import { LineItemsRepository } from "../repositories/line-items-repository";
+import { OrderRepository } from "../repositories/order-repository";
+import {
+  IDeliveryInformation,
+  ILineItem,
+  IPaymentService,
+  IProductLineItem
+} from "./interfaces/interfaces";
 import * as crypto from "crypto";
+import { TelegramService } from "./telegram-service";
 
 export class BinanceService implements IPaymentService {
-  constructor(private readonly httpClient: HttpClient) {}
+  constructor(
+    private readonly httpClient: HttpClient,
+    private readonly lineItemsRepository: LineItemsRepository,
+    private readonly orderRepository: OrderRepository,
+    private readonly telegramService: TelegramService
+  ) {}
 
   async authenticateBinanceAccount() {
     const endpoint = "https://bpay.binanceapi.com";
@@ -54,16 +71,66 @@ export class BinanceService implements IPaymentService {
     return data;
   }
 
-  makeCheckout(
-    lineItems: any[],
+  async makeCheckout(
+    lineItems: IProductLineItem[],
     ip: string,
-    externalIdOrderId: string,
+    externalOrderId: string,
     deliveryInformation?: IDeliveryInformation | undefined
   ): Promise<{ url: string | null }> {
-    throw new Error("Method not implemented.");
-  }
-  switchOrderStatus(ip: string, status: string): Promise<void> {
-    throw new Error("Method not implemented.");
+    const endpoint = "https://bpay.binanceapi.com";
+
+    let lineItemsToBeSend: ILineItem[] = [];
+    const products = lineItems.map((lineItem) => lineItem.name);
+
+    if (ip) {
+      await this.orderRepository.create({ ip, externalOrderId });
+    }
+
+    const productsFound = await this.lineItemsRepository.findMany(products);
+
+    lineItems.forEach((lineItem) => {
+      const priceFound = productsFound.find(
+        (priceId) =>
+          priceId.name.toLowerCase().trim() ===
+          lineItem.name.toLowerCase().trim()
+      );
+
+      if (priceFound?.name) {
+        lineItemsToBeSend.push({
+          price: priceFound?.price!,
+          quantity: Number(lineItem.quantity),
+          ammount: priceFound?.ammount
+        });
+      }
+    });
+
+    const ammount = this.calculateAmmount(lineItemsToBeSend);
+
+    const body = this.makeRequestBody(ammount, "MIROHOBA");
+
+    const {
+      data: { serverTime }
+    } = await this.httpClient.get("https://api4.binance.com/api/v3/time");
+
+    const nonce = this.generateNonce(32);
+
+    const payload = `${serverTime}\n${nonce}\n${JSON.stringify(body)}\n`;
+
+    const signature = this.generateSignature(payload);
+
+    const { data } = await this.httpClient.post(
+      `${endpoint}/binancepay/openapi/v2/order`,
+      body,
+      { headers: this.makeHeader(serverTime, nonce, signature) as any }
+    );
+
+    if (deliveryInformation?.firstName != undefined) {
+      await this.telegramService.sendMessageToTelegramBot(
+        this.telegramService.formatMessage(deliveryInformation)
+      );
+    }
+
+    return { url: data.data.universalUrl };
   }
 
   private generateNonce(length: number) {
@@ -92,5 +159,49 @@ export class BinanceService implements IPaymentService {
     hmac.update(payload);
     const signature = hmac.digest("hex").toUpperCase();
     return signature;
+  }
+
+  private makeRequestBody(ammount: number, productName: string) {
+    return {
+      env: {
+        terminalType: "WEB"
+      },
+      orderTags: {
+        ifProfitSharing: false
+      },
+      merchantTradeNo: new Date().getTime().toString(),
+      fiatAmount: ammount,
+      fiatCurrency: "USD",
+      returnUrl: BINANCE_SUCESS_URL,
+      cancelUrl: BINANCE_CANCEL_URL,
+      goods: {
+        goodsType: "01",
+        goodsCategory: "Z000",
+        referenceGoodsId: "p0ZoB1FwH6",
+        goodsName: productName,
+        goodsDetail: "MIHOROBA"
+      }
+    };
+  }
+
+  private calculateAmmount(lineItems: ILineItem[]) {
+    return lineItems.reduce((accumulator, currentValue: ILineItem) => {
+      const product = currentValue.ammount! * currentValue.quantity;
+      return accumulator + product;
+    }, 0);
+  }
+
+  async switchOrderStatus(ip: string, status: string): Promise<void> {
+    const orderFound = (await this.orderRepository.findMany(ip)).at(0);
+    const url = `https://mimosapowders.com/wp-json/wc/v3/orders/${
+      orderFound?.externalOrderId
+    }?consumer_key=${WOOCOMMERCE_COSTUMER_KEY!}&consumer_secret=${WOOCOMMERCE_COSTUMER_SECRET!}`;
+    const result = await this.httpClient.put(
+      url,
+      { status },
+      { headers: { "Content-Type": "application/json" } }
+    );
+
+    return result.data;
   }
 }

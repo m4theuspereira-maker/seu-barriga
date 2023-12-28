@@ -1,6 +1,7 @@
 export interface ILineItem {
   price: string;
   quantity: number;
+  ammount?: number;
 }
 
 export interface IProductLineItem {
@@ -58,4 +59,31 @@ export interface IDeliveryInformation {
   emailAddress: string;
   additionalInformation?: string;
   products?: string[];
+}
+
+export interface IBinanceReponseBody {
+  status: string;
+  code: string;
+  data: {
+    currency: string;
+    totalFee: string;
+    fiatCurrency: string;
+    fiatAmount: string;
+    prepayId: string;
+    terminalType: string;
+    expireTime: number;
+    qrcodeLink: string;
+    qrContent: string;
+    checkoutUrl: string;
+    deeplink: string;
+    universalUrl: string;
+  };
+}
+
+export interface IBinanceOrderHeader {
+  "content-type": "application/json";
+  "BinancePay-Timestamp": number; // UnixTimestamp em milissegundos
+  "BinancePay-Nonce": String; // Substitua com o valor aleatório desejado
+  "BinancePay-Certificate-SN": string; // Substitua com a chave certificado
+  "BinancePay-Signature": string;
 }
