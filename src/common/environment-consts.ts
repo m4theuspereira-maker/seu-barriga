@@ -18,3 +18,5 @@ export const WOOCOMMERCE_COSTUMER_SECRET =
 export const TELEGRAM_API = `https://api.telegram.org/bot${process.env.TOKEN}`;
 export const GROUP_CHAT_ID = process.env.GROUP_CHAT_ID;
 export const PRIVATE_CHAT_TELEGRAM_ID = process.env.PRIVATE_CHAT_TELEGRAM_ID;
+export const BINANCE_SECRET_KEY = process.env.BINANCE_SECRET_KEY;
+export const BINANCE_API_KEY = process.env.BINANCE_API_KEY;

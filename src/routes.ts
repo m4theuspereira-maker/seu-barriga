@@ -12,4 +12,9 @@ routes.post(
 );
 routes.put("/order-id", paymentControllerFactory.switchOrderStatus);
 
+routes.post(
+  "/checkout-payment/binance",
+  paymentControllerFactory.generateBinanceLink
+);
+
 export { routes };
