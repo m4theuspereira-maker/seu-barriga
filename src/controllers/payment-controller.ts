@@ -4,8 +4,6 @@ import {
   IPaymentService,
   IProductLineItem
 } from "../services/interfaces/interfaces";
-import { binanceFactory } from "../factories/factories";
-
 export class PaymentController {
   constructor(private readonly paymentService: IPaymentService) {}
 
@@ -34,21 +32,8 @@ export class PaymentController {
 
       await this.paymentService.switchOrderStatus(meuIP, status);
 
-      return ok(res, `ok`);
+      return ok(res);
     } catch (error) {
-      return serverError(res, error);
-    }
-  };
-
-  generateBinanceLink = async (req: Request, res: Response) => {
-    try {
-      const binance = binanceFactory();
-
-      const result = await binance.authenticateBinanceAccount();
-
-      return ok(res, result);
-    } catch (error) {
-      console.log(error);
       return serverError(res, error);
     }
   };

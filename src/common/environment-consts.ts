@@ -22,3 +22,5 @@ export const GROUP_CHAT_ID = process.env.GROUP_CHAT_ID;
 export const PRIVATE_CHAT_TELEGRAM_ID = process.env.PRIVATE_CHAT_TELEGRAM_ID;
 export const BINANCE_SECRET_KEY = process.env.BINANCE_SECRET_KEY;
 export const BINANCE_API_KEY = process.env.BINANCE_API_KEY;
+export const BINANACE_PAY_BASE_URL = "https://bpay.binanceapi.com";
+export const BINANCE_GET_TIME_URL = "https://api4.binance.com/api/v3/time";

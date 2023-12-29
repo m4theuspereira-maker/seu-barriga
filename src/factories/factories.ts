@@ -30,3 +30,7 @@ export function binanceFactory() {
     telegramService
   );
 }
+
+export function binanceControlleFactory(binanceFactory: BinanceService) {
+  return new PaymentController(binanceFactory);
+}

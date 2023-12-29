@@ -1,6 +1,8 @@
 import {
+  BINANACE_PAY_BASE_URL,
   BINANCE_API_KEY,
   BINANCE_CANCEL_URL,
+  BINANCE_GET_TIME_URL,
   BINANCE_SECRET_KEY,
   BINANCE_SUCESS_URL,
   WOOCOMMERCE_COSTUMER_KEY,
@@ -26,59 +28,12 @@ export class BinanceService implements IPaymentService {
     private readonly telegramService: TelegramService
   ) {}
 
-  async authenticateBinanceAccount() {
-    const endpoint = "https://bpay.binanceapi.com";
-
-    const body = {
-      env: {
-        terminalType: "WEB"
-      },
-      orderTags: {
-        ifProfitSharing: false
-      },
-      merchantTradeNo: new Date().getTime().toString(),
-      fiatAmount: 200,
-      fiatCurrency: "USD",
-      returnUrl: "",
-      cancelUrl: "",
-      goods: {
-        goodsType: "01",
-        goodsCategory: "Z000",
-        referenceGoodsId: "p0ZoB1FwH6",
-        goodsName: "MIHOROBA - 0.5kg powder",
-        goodsDetail: "MIHOROBA"
-      }
-    };
-
-    const {
-      data: { serverTime }
-    } = await this.httpClient.get("https://api4.binance.com/api/v3/time");
-
-    const nonce = this.generateNonce(32);
-
-    const payload = `${serverTime}\n${nonce}\n${JSON.stringify(body)}\n`;
-
-    const signature = this.generateSignature(payload);
-
-    const headers = this.makeHeader(serverTime, nonce, signature) as any;
-
-    const { data } = await this.httpClient.post(
-      `${endpoint}/binancepay/openapi/v2/order`,
-      body,
-      { headers }
-    );
-
-    return data;
-  }
-
   async makeCheckout(
     lineItems: IProductLineItem[],
     ip: string,
     externalOrderId: string,
     deliveryInformation?: IDeliveryInformation | undefined
   ): Promise<{ url: string | null }> {
-    const endpoint = "https://bpay.binanceapi.com";
-
     let lineItemsToBeSend: ILineItem[] = [];
     const products = lineItems.map((lineItem) => lineItem.name);
 
@@ -86,40 +41,25 @@ export class BinanceService implements IPaymentService {
       await this.orderRepository.create({ ip, externalOrderId });
     }
 
-    const productsFound = await this.lineItemsRepository.findMany(products);
+    lineItemsToBeSend = await this.getLineItemsToBeSend(products, lineItems);
 
-    lineItems.forEach((lineItem) => {
-      const priceFound = productsFound.find(
-        (priceId) =>
-          priceId.name.toLowerCase().trim() ===
-          lineItem.name.toLowerCase().trim()
-      );
-
-      if (priceFound?.name) {
-        lineItemsToBeSend.push({
-          price: priceFound?.price!,
-          quantity: Number(lineItem.quantity),
-          ammount: priceFound?.ammount
-        });
-      }
-    });
-
-    const ammount = this.calculateAmmount(lineItemsToBeSend);
-
-    const body = this.makeRequestBody(ammount, "MIROHOBA");
+    const body = this.makeRequestBody(
+      this.calculateAmmount(lineItemsToBeSend),
+      "MIROHOBA"
+    );
 
     const {
       data: { serverTime }
-    } = await this.httpClient.get("https://api4.binance.com/api/v3/time");
+    } = await this.httpClient.get(BINANCE_GET_TIME_URL);
 
     const nonce = this.generateNonce(32);
 
-    const payload = `${serverTime}\n${nonce}\n${JSON.stringify(body)}\n`;
-
-    const signature = this.generateSignature(payload);
+    const signature = this.generateSignature(
+      `${serverTime}\n${nonce}\n${JSON.stringify(body)}\n`
+    );
 
     const { data } = await this.httpClient.post(
-      `${endpoint}/binancepay/openapi/v2/order`,
+      `${BINANACE_PAY_BASE_URL}/binancepay/openapi/v2/order`,
       body,
       { headers: this.makeHeader(serverTime, nonce, signature) as any }
     );
@@ -157,8 +97,7 @@ export class BinanceService implements IPaymentService {
   private generateSignature(payload: string) {
     const hmac = crypto.createHmac("sha512", BINANCE_SECRET_KEY!);
     hmac.update(payload);
-    const signature = hmac.digest("hex").toUpperCase();
-    return signature;
+    return hmac.digest("hex").toUpperCase();
   }
 
   private makeRequestBody(ammount: number, productName: string) {
@@ -203,5 +142,31 @@ export class BinanceService implements IPaymentService {
     );
 
     return result.data;
+  }
+
+  private async getLineItemsToBeSend(
+    products: string[],
+    lineItems: IProductLineItem[]
+  ) {
+    let lineItemsToBeSend: ILineItem[] = [];
+    const productsFound = await this.lineItemsRepository.findMany(products);
+
+    lineItems.forEach((lineItem) => {
+      const priceFound = productsFound.find(
+        (priceId) =>
+          priceId.name.toLowerCase().trim() ===
+          lineItem.name.toLowerCase().trim()
+      );
+
+      if (priceFound?.name) {
+        lineItemsToBeSend.push({
+          price: priceFound?.price!,
+          quantity: Number(lineItem.quantity),
+          ammount: priceFound?.ammount
+        });
+      }
+    });
+
+    return lineItemsToBeSend;
   }
 }
