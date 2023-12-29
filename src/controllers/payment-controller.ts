@@ -22,6 +22,7 @@ export class PaymentController {
 
       return ok(res, result.url!);
     } catch (error) {
+      console.log(error);
       return serverError(res, error);
     }
   };

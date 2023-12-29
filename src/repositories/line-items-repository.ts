@@ -5,14 +5,17 @@ import { ObjectId } from "mongodb";
 export class LineItemsRepository implements IRepository {
   constructor(private readonly client: PrismaClient) {}
 
-  async create(item: { name: string; price: string }) {
+  async create(item: { name: string; price: string; ammount: number }) {
     return this.client.lineItem.create({
       data: { ...item, id: new ObjectId().toString() }
     });
   }
 
-  async createMany(lineItems: { price: string; name: string }[]) {
+  async createMany(
+    lineItems: { price: string; name: string; ammount: number }[]
+  ) {
     const data = lineItems.map((lineItem) => ({
+      ammount: lineItem.ammount,
       price: lineItem.price,
       name: lineItem.name,
       id: new ObjectId().toString()
