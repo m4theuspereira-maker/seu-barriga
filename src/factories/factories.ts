@@ -6,6 +6,7 @@ import { LineItemsRepository } from "../repositories/line-items-repository";
 import { StripeService } from "../services/stripe-service";
 import { OrderRepository } from "../repositories/order-repository";
 import { TelegramService } from "../services/telegram-service";
+import { BinanceService } from "../services/binance-service";
 
 export const telegramService = new TelegramService(axios);
 
@@ -19,4 +20,17 @@ export function paymentFactory() {
       telegramService
     )
   );
+}
+
+export function binanceFactory() {
+  return new BinanceService(
+    axios,
+    new LineItemsRepository(client),
+    new OrderRepository(client),
+    telegramService
+  );
+}
+
+export function binanceControlleFactory(binanceFactory: BinanceService) {
+  return new PaymentController(binanceFactory);
 }

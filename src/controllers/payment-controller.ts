@@ -4,14 +4,12 @@ import {
   IPaymentService,
   IProductLineItem
 } from "../services/interfaces/interfaces";
-
 export class PaymentController {
   constructor(private readonly paymentService: IPaymentService) {}
 
   makeCheckout = async (req: Request, res: Response) => {
     try {
       const { meuIP: ip, dados, deliveryInformation } = req.body as any;
-
 
       const { id: externalOrderId, line_items: lineItems } = dados;
 
@@ -34,7 +32,7 @@ export class PaymentController {
 
       await this.paymentService.switchOrderStatus(meuIP, status);
 
-      return ok(res, `ok`);
+      return ok(res);
     } catch (error) {
       return serverError(res, error);
     }
