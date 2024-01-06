@@ -16,7 +16,7 @@ routes.post(
 );
 
 routes.post(
-  "/binanace/checkout-payment",
+  "/binance/checkout-payment",
   ValidationMiddlewares.checkoutPayment,
   binancePaymentFactory.makeCheckout
 );
