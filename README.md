@@ -1,99 +1,56 @@
-## Description
+## Descrição
 
-Seu Barriga is an integration payment service, that for a while is integrated only with stripe checkout payment. This service can me integred with any payment gateway
+Seu Barriga é um integrador de serviços de pagamento que é utilizado em alguns sites. O objetivo desse projeto é juntar serviços de pagamento como Stripe, Binance ou qualquer outro do que venha a ser conveniente. A necessidade de um projeto como esse se dá devido ao fato de alguns gateways de pagamento terem certas limitações, como: alguns tipos de produtos que são proíbidos dentro das plataformas ou plataformas que são restritos em alguns países (o que se aplica ao binanace pay tem restrições nos EUA, Canadá e UE).
+### Como configurar o projeto
 
-### To build project and add husky configuration
-
-(to know more about husky: https://typicode.github.io/husky/#/)
+```
+$ git clone https://github.com/m4theuspereira-maker/seu-barriga
+```
 
 ```
 $ npm run build
 ```
 
-### Or if you wanna just create .husky folder with pre-push and pre-commit files
-
 ```
-$ npm run prepare
+$ npm run i
 ```
 
-### To start project from dist folder
+### Para iniciar o da plasta dist
 
 ```
 $ npm start
 ```
 
-### To start project from src folder with tsx
+### Para inicar o projeto em modo desenvolvimento
 
 ```
 $ npm run dev
 ```
 
-### Run all the test suits
+### Para executar todas as suites de teste
 
 ```
 $ npm test
 ```
 
-### Select wich suit you wanna run in watch mode or related files uncommited by git
+### Para executar apenas os testes que estão relacionados aos arquivos modificados
 
-(know more in: https://vitest.dev/guide/
+(saiba mais em: https://vitest.dev/guide/)
 
 ```
 $ npm run test:watch
 ```
 
-### Run all the tests and generate bunch of informations about project test coverage
+### Para executar todas as suites e gerar um arquivo com as informações de cobertura de teste
 
 ```
 $ npm run test:coverage
 ```
 
-### To start project from docker container
+### Para iniciar o projeto a partir do docker
 
-(know more in: https://docs.docker.com/get-started/ and https://docs.docker.com/compose/gettingstarted/)
+(saiba mais em: https://docs.docker.com/get-started/ and https://docs.docker.com/compose/gettingstarted/)
 
 ```
 $ docker-compose up
-```
-
-To build a container and then start automatically
-
-```
-$ docker-compose build
-```
-
-To build a container with dockerfile configs, you can start manually with the command
-
-```
-$ docker run template-template
-```
-
-## Project folders schema
-
-```
-├─ .circleci
-│  └─ config.yml
-├─ .dockerignore
-├─ .editorconfig
-├─ .eslintignore
-├─ .eslintrc.json
-├─ .gitignore
-├─ .prettierrc.json
-├─ Dockerfile
-├─ README.md
-├─ docker-compose.yml
-├─ vitest.config.js
-├─ package.json
-├─ src
-│  ├─ common
-│  │  └─ environment-consts.ts
-│  ├─ index.ts
-│  └─ routes.ts
-├─ tests
-│  ├─ example.int.spec.ts
-│  └─ example.spec.ts
-├─ tsconfig-build.json
-├─ tsconfig.json
-├─ yarn-error.log
-└─ yarn.lock
 ```
