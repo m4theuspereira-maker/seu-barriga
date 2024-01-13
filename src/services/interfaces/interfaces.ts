@@ -87,3 +87,12 @@ export interface IBinanceOrderHeader {
   "BinancePay-Certificate-SN": string; // Substitua com a chave certificado
   "BinancePay-Signature": string;
 }
+
+export interface ILineItemsService {
+  getLineItemsToBeSend(
+    products: string[],
+    lineItems: IProductLineItem[]
+  ): Promise<ILineItem[]>;
+
+  switchOrderStatus(ip: string, status: string): Promise<any>;
+}

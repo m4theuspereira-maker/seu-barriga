@@ -7,6 +7,7 @@ import { StripeService } from "../services/stripe-service";
 import { OrderRepository } from "../repositories/order-repository";
 import { TelegramService } from "../services/telegram-service";
 import { BinanceService } from "../services/binance-service";
+import { LineItemsService } from "../services/lineItems-service";
 
 export const telegramService = new TelegramService(axios);
 
@@ -25,9 +26,13 @@ export function paymentFactory() {
 export function binanceFactory() {
   return new BinanceService(
     axios,
-    new LineItemsRepository(client),
     new OrderRepository(client),
-    telegramService
+    telegramService,
+    new LineItemsService(
+      new LineItemsRepository(client),
+      new OrderRepository(client),
+      axios
+    )
   );
 }
 

@@ -14,6 +14,7 @@ import { OrderRepository } from "../repositories/order-repository";
 import {
   IDeliveryInformation,
   ILineItem,
+  ILineItemsService,
   IPaymentService,
   IProductLineItem
 } from "./interfaces/interfaces";
@@ -23,9 +24,9 @@ import { TelegramService } from "./telegram-service";
 export class BinanceService implements IPaymentService {
   constructor(
     private readonly httpClient: HttpClient,
-    private readonly lineItemsRepository: LineItemsRepository,
     private readonly orderRepository: OrderRepository,
-    private readonly telegramService: TelegramService
+    private readonly telegramService: TelegramService,
+    private readonly lineItemsService: ILineItemsService
   ) {}
 
   async makeCheckout(
@@ -41,7 +42,10 @@ export class BinanceService implements IPaymentService {
       await this.orderRepository.create({ ip, externalOrderId });
     }
 
-    lineItemsToBeSend = await this.getLineItemsToBeSend(products, lineItems);
+    lineItemsToBeSend = await this.lineItemsService.getLineItemsToBeSend(
+      products,
+      lineItems
+    );
 
     const body = this.makeRequestBody(
       this.calculateAmmount(lineItemsToBeSend),
@@ -131,42 +135,6 @@ export class BinanceService implements IPaymentService {
   }
 
   async switchOrderStatus(ip: string, status: string): Promise<void> {
-    const orderFound = (await this.orderRepository.findMany(ip)).at(0);
-    const url = `https://mimosapowders.com/wp-json/wc/v3/orders/${
-      orderFound?.externalOrderId
-    }?consumer_key=${WOOCOMMERCE_COSTUMER_KEY!}&consumer_secret=${WOOCOMMERCE_COSTUMER_SECRET!}`;
-    const result = await this.httpClient.put(
-      url,
-      { status },
-      { headers: { "Content-Type": "application/json" } }
-    );
-
-    return result.data;
-  }
-
-  private async getLineItemsToBeSend(
-    products: string[],
-    lineItems: IProductLineItem[]
-  ) {
-    let lineItemsToBeSend: ILineItem[] = [];
-    const productsFound = await this.lineItemsRepository.findMany(products);
-
-    lineItems.forEach((lineItem) => {
-      const priceFound = productsFound.find(
-        (priceId) =>
-          priceId.name.toLowerCase().trim() ===
-          lineItem.name.toLowerCase().trim()
-      );
-
-      if (priceFound?.name) {
-        lineItemsToBeSend.push({
-          price: priceFound?.price!,
-          quantity: Number(lineItem.quantity),
-          ammount: priceFound?.ammount
-        });
-      }
-    });
-
-    return lineItemsToBeSend;
+    return await this.lineItemsService.switchOrderStatus(ip, status);
   }
 }
