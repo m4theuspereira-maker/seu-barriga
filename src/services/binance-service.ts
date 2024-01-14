@@ -67,7 +67,7 @@ export class BinanceService implements IPaymentService {
 
     if (deliveryInformation?.firstName != undefined) {
       await this.telegramService.sendMessageToTelegramBot(
-        this.telegramService.formatMessage(deliveryInformation)
+        this.telegramService.formatMessage({ ...deliveryInformation, products })
       );
     }
 
