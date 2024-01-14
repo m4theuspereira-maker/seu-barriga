@@ -95,4 +95,6 @@ export interface ILineItemsService {
   ): Promise<ILineItem[]>;
 
   switchOrderStatus(ip: string, status: string): Promise<any>;
+
+  calculateAmmount(lineItems: ILineItem[]): number;
 }

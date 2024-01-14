@@ -24,3 +24,6 @@ export const BINANCE_SECRET_KEY = process.env.BINANCE_SECRET_KEY;
 export const BINANCE_API_KEY = process.env.BINANCE_API_KEY;
 export const BINANACE_PAY_BASE_URL = "https://bpay.binanceapi.com";
 export const BINANCE_GET_TIME_URL = "https://api4.binance.com/api/v3/time";
+export const PAYZEN_BASE_URL = "https://api.payzen.com.br";
+export const PAYZEN_API_USERNAME = process.env.PAYZEN_API_USERNAME;
+export const PAYZEN_API_PASSWORD = process.env.PAYZEN_API_PASSWORD;

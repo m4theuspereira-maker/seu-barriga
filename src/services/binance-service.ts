@@ -4,12 +4,9 @@ import {
   BINANCE_CANCEL_URL,
   BINANCE_GET_TIME_URL,
   BINANCE_SECRET_KEY,
-  BINANCE_SUCESS_URL,
-  WOOCOMMERCE_COSTUMER_KEY,
-  WOOCOMMERCE_COSTUMER_SECRET
+  BINANCE_SUCESS_URL
 } from "../common/environment-consts";
 import { HttpClient } from "../config/client";
-import { LineItemsRepository } from "../repositories/line-items-repository";
 import { OrderRepository } from "../repositories/order-repository";
 import {
   IDeliveryInformation,
@@ -48,7 +45,7 @@ export class BinanceService implements IPaymentService {
     );
 
     const body = this.makeRequestBody(
-      this.calculateAmmount(lineItemsToBeSend),
+      this.lineItemsService.calculateAmmount(lineItemsToBeSend),
       "MIROHOBA"
     );
 
@@ -125,13 +122,6 @@ export class BinanceService implements IPaymentService {
         goodsDetail: "MIHOROBA"
       }
     };
-  }
-
-  private calculateAmmount(lineItems: ILineItem[]) {
-    return lineItems.reduce((accumulator, currentValue: ILineItem) => {
-      const product = currentValue.ammount! * currentValue.quantity;
-      return accumulator + product;
-    }, 0);
   }
 
   async switchOrderStatus(ip: string, status: string): Promise<void> {

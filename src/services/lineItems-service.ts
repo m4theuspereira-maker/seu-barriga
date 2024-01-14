@@ -57,4 +57,11 @@ export class LineItemsService implements ILineItemsService {
 
     return lineItemsToBeSend;
   }
+
+  calculateAmmount(lineItems: ILineItem[]) {
+    return lineItems.reduce((accumulator, currentValue: ILineItem) => {
+      const product = currentValue.ammount! * currentValue.quantity;
+      return accumulator + product;
+    }, 0);
+  }
 }

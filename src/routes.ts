@@ -2,12 +2,15 @@ import { Router } from "express";
 import {
   binanceControlleFactory,
   binanceFactory,
-  paymentFactory
+  paymentFactory,
+  payzenControllerFactory,
+  payzenFactory
 } from "./factories/factories";
 import { ValidationMiddlewares } from "./middlewares/validation-middlewares";
 
 const paymentControllerFactory = paymentFactory();
 const binancePaymentFactory = binanceControlleFactory(binanceFactory());
+const payzenPaymentFactory = payzenControllerFactory(payzenFactory());
 const routes = Router();
 routes.post(
   "/checkout-payment",
@@ -20,6 +23,13 @@ routes.post(
   ValidationMiddlewares.checkoutPayment,
   binancePaymentFactory.makeCheckout
 );
+
+routes.post(
+  "/payzen/chechout-payment",
+  ValidationMiddlewares.checkoutPayment,
+  payzenPaymentFactory.makeCheckout
+);
+
 routes.put("/order-id", binancePaymentFactory.switchOrderStatus);
 
 export { routes };

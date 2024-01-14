@@ -8,6 +8,7 @@ import { OrderRepository } from "../repositories/order-repository";
 import { TelegramService } from "../services/telegram-service";
 import { BinanceService } from "../services/binance-service";
 import { LineItemsService } from "../services/lineItems-service";
+import { PayzenService } from "../services/payzen-service";
 
 export const telegramService = new TelegramService(axios);
 
@@ -36,6 +37,23 @@ export function binanceFactory() {
   );
 }
 
+export function payzenFactory() {
+  return new PayzenService(
+    new OrderRepository(client),
+    new LineItemsService(
+      new LineItemsRepository(client),
+      new OrderRepository(client),
+      axios
+    ),
+    axios,
+    new TelegramService(axios)
+  );
+}
+
 export function binanceControlleFactory(binanceFactory: BinanceService) {
   return new PaymentController(binanceFactory);
+}
+
+export function payzenControllerFactory(payzenFactory: PayzenService) {
+  return new PaymentController(payzenFactory);
 }
