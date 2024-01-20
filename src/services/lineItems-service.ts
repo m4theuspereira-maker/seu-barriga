@@ -50,7 +50,8 @@ export class LineItemsService implements ILineItemsService {
         lineItemsToBeSend.push({
           price: priceFound?.price!,
           quantity: Number(lineItem.quantity),
-          ammount: priceFound?.ammount
+          ammount: priceFound?.ammount,
+          guruPaymentLink: priceFound.guruPaymentLink!
         });
       }
     });

@@ -2,6 +2,7 @@ export interface ILineItem {
   price: string;
   quantity: number;
   ammount?: number;
+  guruPaymentLink?: string;
 }
 
 export interface IProductLineItem {

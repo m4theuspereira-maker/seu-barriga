@@ -27,9 +27,14 @@ export class LineItemsRepository implements IRepository {
     throw new Error("Method not implemented.");
   }
 
-  async findMany(
-    names: string[]
-  ): Promise<{ price: string; name: string; ammount?: number }[]> {
+  async findMany(names: string[]): Promise<
+    {
+      price: string;
+      name: string;
+      ammount?: number;
+      guruPaymentLink?: string | null;
+    }[]
+  > {
     return this.client.lineItem.findMany({ where: { name: { in: names } } });
   }
 

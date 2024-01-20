@@ -12,10 +12,11 @@ datasource db {
 }
 
 model lineItem {
-  id      String @id @map("_id") @db.ObjectId
-  name    String
-  price   String
-  ammount Int
+  id              String  @id @map("_id") @db.ObjectId
+  name            String
+  price           String
+  ammount         Int
+  guruPaymentLink String?
 }
 
 model order {
