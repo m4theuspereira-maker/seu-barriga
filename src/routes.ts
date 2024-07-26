@@ -1,43 +1,22 @@
-import { Router } from "express";
-import {
-  binanceControlleFactory,
-  binanceFactory,
-  guruControllerFactory,
-  guruFactory,
-  paymentFactory,
-  payzenControllerFactory,
-  payzenFactory
-} from "./factories/factories";
+import { Request, Router } from "express";
+import { binanceControlleFactory, binanceFactory } from "./factories/factories";
 import { ValidationMiddlewares } from "./middlewares/validation-middlewares";
+import {
+  controllerAdapter,
+  initializePostRoutes,
+  POST_URLS
+} from "./middlewares/url-adapter-middlewares";
 
-const paymentControllerFactory = paymentFactory();
 const binancePaymentFactory = binanceControlleFactory(binanceFactory());
-const payzenPaymentFactory = payzenControllerFactory(payzenFactory());
-const guruPaymentFactory = guruControllerFactory(guruFactory());
 
 const routes = Router();
-routes.post(
-  "/checkout-payment",
-  ValidationMiddlewares.checkoutPayment,
-  paymentControllerFactory.makeCheckout
-);
+
+initializePostRoutes(POST_URLS, routes);
 
 routes.post(
-  "/binance/checkout-payment",
+  String((req: Request) => req.url),
   ValidationMiddlewares.checkoutPayment,
-  binancePaymentFactory.makeCheckout
-);
-
-routes.post(
-  "/payzen/chechout-payment",
-  ValidationMiddlewares.checkoutPayment,
-  payzenPaymentFactory.makeCheckout
-);
-
-routes.post(
-  "/guru/chechout-payment",
-  ValidationMiddlewares.checkoutPayment,
-  guruPaymentFactory.makeCheckout
+  controllerAdapter
 );
 
 routes.put("/order-id", binancePaymentFactory.switchOrderStatus);
