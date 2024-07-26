@@ -11,12 +11,6 @@ export class OrderRepository implements IRepository {
     });
   }
 
-  createMany(input: any): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
-  update(id: string, updatePlayload: any): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
   async findMany(ip: string): Promise<IOrderFound[]> {
     return this.client.order.findMany({
       where: { ip },

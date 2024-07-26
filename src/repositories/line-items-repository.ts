@@ -23,9 +23,6 @@ export class LineItemsRepository implements IRepository {
 
     return this.client.lineItem.createMany({ data });
   }
-  update(id: string, updatePlayload: any): Promise<any> {
-    throw new Error("Method not implemented.");
-  }
 
   async findMany(names: string[]): Promise<
     {
@@ -36,9 +33,5 @@ export class LineItemsRepository implements IRepository {
     }[]
   > {
     return this.client.lineItem.findMany({ where: { name: { in: names } } });
-  }
-
-  findOne(input: any): Promise<any> {
-    throw new Error("Method not implemented.");
   }
 }
