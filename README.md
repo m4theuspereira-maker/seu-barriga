@@ -1,56 +1,66 @@
-## Descrição
+## Description
 
-Seu Barriga é um integrador de serviços de pagamento que é utilizado em alguns sites. O objetivo desse projeto é juntar serviços de pagamento como Stripe, Binance ou qualquer outro do que venha a ser conveniente. A necessidade de um projeto como esse se dá devido ao fato de alguns gateways de pagamento terem certas limitações, como: alguns tipos de produtos que são proíbidos dentro das plataformas ou plataformas que são restritos em alguns países (o que se aplica ao binanace pay tem restrições nos EUA, Canadá e UE).
-### Como configurar o projeto
+Seu Barriga is a payment service integrator used across several websites. The goal of this project is to aggregate multiple payment services, such as Stripe, Binance Pay, or any other convenient provider, into a single platform. The need for a project like this arises from the limitations of certain payment gateways, such as restrictions on specific types of products or geographic limitations (for example, Binance Pay is restricted in the US, Canada, and the EU).
+
+### How to set up the project
 
 ```
 $ git clone https://github.com/m4theuspereira-maker/seu-barriga
+
 ```
 
 ```
 $ npm run build
+
 ```
 
 ```
 $ npm run i
+
 ```
 
-### Para iniciar o da plasta dist
+### To start the project from the dist folder
 
 ```
 $ npm start
+
 ```
 
-### Para inicar o projeto em modo desenvolvimento
+### To start the project in development mode
 
 ```
 $ npm run dev
+
 ```
 
-### Para executar todas as suites de teste
+### To run all test suites
 
 ```
 $ npm test
+
 ```
 
-### Para executar apenas os testes que estão relacionados aos arquivos modificados
+### To run only the tests related to modified files
 
-(saiba mais em: https://vitest.dev/guide/)
+(learn more at: [https://vitest.dev/guide/](https://vitest.dev/guide/))
 
 ```
 $ npm run test:watch
+
 ```
 
-### Para executar todas as suites e gerar um arquivo com as informações de cobertura de teste
+### To run all test suites and generate a test coverage report
 
 ```
 $ npm run test:coverage
+
 ```
 
-### Para iniciar o projeto a partir do docker
+### To start the project using Docker
 
-(saiba mais em: https://docs.docker.com/get-started/ and https://docs.docker.com/compose/gettingstarted/)
+(learn more at: [https://docs.docker.com/get-started/](https://docs.docker.com/get-started/) and [https://docs.docker.com/compose/gettingstarted/](https://docs.docker.com/compose/gettingstarted/))
 
 ```
 $ docker-compose up
+
 ```
